@@ -3,17 +3,16 @@ from fastapi import FastAPI, HTTPException, Response, status, Depends, APIRouter
 from sqlalchemy.orm import Session
 from .. database import get_db
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/posts",
+    tags=['Posts']
+)
 
-
-@router.get("/")
-def read_root():
-    return {"Hello": "World"}
 
 # GET Route: Gets the Posts
 
 
-@router.get("/posts", response_model=list[schemas.Post])
+@router.get("/", response_model=list[schemas.Post])
 def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     # cursor.execute(""" SELECT * FROM "blogPosts" ORDER BY post_id""")
@@ -24,7 +23,7 @@ def get_posts(db: Session = Depends(get_db)):
 # Create Post Route
 
 
-@router.post("/createpost", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_posts(post: schemas.CreatePost, db: Session = Depends(get_db)):
 
     newPost = models.Post(**post.dict())
@@ -41,7 +40,7 @@ def create_posts(post: schemas.CreatePost, db: Session = Depends(get_db)):
 # Retrieve One Post
 
 
-@router.get("/posts/{id}", response_model=schemas.Post)
+@router.get("/{id}", response_model=schemas.Post)
 def get_post(id: int, db: Session = Depends(get_db)):
 
     post = db.query(models.Post).filter(models.Post.post_id == id).first()
@@ -57,7 +56,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
 # Delete Post
 
 
-@router.delete("/posts/{id}")
+@router.delete("/{id}")
 def delete_post(id: int,  db: Session = Depends(get_db)):
 
     deleted_post = db.query(models.Post).filter(models.Post.post_id == id)
@@ -75,7 +74,7 @@ def delete_post(id: int,  db: Session = Depends(get_db)):
 # Update Post
 
 
-@router.put("/posts/{id}", response_model=schemas.Post)
+@router.put("/{id}", response_model=schemas.Post)
 def update_post(id: int, updated_post: schemas.UpdatePost,  db: Session = Depends(get_db)):
 
     post_query = db.query(models.Post).filter(models.Post.post_id == id)

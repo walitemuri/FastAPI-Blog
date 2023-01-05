@@ -3,7 +3,7 @@ import psycopg2
 from pydantic import BaseModel
 from psycopg2.extras import RealDictCursor
 import time
-from . routers import post, user
+from . routers import post, user, auth
 from . import utils
 from . import models
 from .database import engine, SessionLocal, get_db
@@ -28,7 +28,7 @@ Fields:
 while True:
     try:
         conn = psycopg2.connect(host='localhost', database='fastapi-blog',
-                                user='postgres', cursor_factory=RealDictCursor)
+                                user='postgres', cursor_factory=RealDictCursor, port="5433")
         cursor = conn.cursor()
         print("Database connection was sucessful")
         break
@@ -40,10 +40,11 @@ while True:
 
 app.include_router(post.router)
 app.include_router(user.router)
+app.include_router(auth.router)
 
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {}
 
 # GET Route: Gets the Posts
