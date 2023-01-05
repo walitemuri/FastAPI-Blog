@@ -6,7 +6,7 @@ import time
 from . import models
 from .database import engine, SessionLocal, get_db
 from sqlalchemy.orm import Session
-
+from . import schemas
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -19,12 +19,6 @@ Fields:
     title: (String) 
     content: (String)
 """
-
-
-class blogPost(BaseModel):
-    title: str
-    content: str
-    published: bool = True
 
 
 while True:
@@ -48,19 +42,19 @@ def read_root():
 # GET Route: Gets the Posts
 
 
-@app.get("/posts")
+@app.get("/posts", response_model=list[schemas.Post])
 def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     # cursor.execute(""" SELECT * FROM "blogPosts" ORDER BY post_id""")
     # posts = cursor.fetchall()
     # print(posts)
-    return {"data": posts}
+    return posts
 
 # Create Post Route
 
 
-@app.post("/createpost", status_code=status.HTTP_201_CREATED)
-def create_posts(post: blogPost, db: Session = Depends(get_db)):
+@app.post("/createpost", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
+def create_posts(post: schemas.CreatePost, db: Session = Depends(get_db)):
 
     newPost = models.Post(**post.dict())
     db.add(newPost)
@@ -70,13 +64,13 @@ def create_posts(post: blogPost, db: Session = Depends(get_db)):
     #                (post.title, post.content, post.published))
     # newPost = cursor.fetchone()
     # conn.commit()
-    return {"data": newPost}
+    return newPost
 
 
 # Retrieve One Post
 
 
-@app.get("/posts/{id}")
+@app.get("/posts/{id}", response_model=schemas.Post)
 def get_post(id: int, db: Session = Depends(get_db)):
 
     post = db.query(models.Post).filter(models.Post.post_id == id).first()
@@ -87,7 +81,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
     if post == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id {id} does not exist")
-    return {"post_detail": post}
+    return post
 
 # Delete Post
 
@@ -110,8 +104,8 @@ def delete_post(id: int,  db: Session = Depends(get_db)):
 # Update Post
 
 
-@app.put("/posts/{id}")
-def update_post(id: int, updated_post: blogPost,  db: Session = Depends(get_db)):
+@app.put("/posts/{id}", response_model=schemas.Post)
+def update_post(id: int, updated_post: schemas.UpdatePost,  db: Session = Depends(get_db)):
 
     post_query = db.query(models.Post).filter(models.Post.post_id == id)
     post = post_query.first()
@@ -124,4 +118,4 @@ def update_post(id: int, updated_post: blogPost,  db: Session = Depends(get_db))
                             detail=f"post with id: {id} not found")
     post_query.update(updated_post.dict(), synchronize_session=False)
     db.commit()
-    return {"post_detail": post_query.first()}
+    return post_query.first()
