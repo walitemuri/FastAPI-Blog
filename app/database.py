@@ -1,7 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
+from psycopg2.extras import RealDictCursor
+import psycopg2
+import time
 
 def get_db():
     db = SessionLocal()
@@ -9,6 +11,19 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+while True:
+    try:
+        conn = psycopg2.connect(host='localhost', database='fastapi-blog',
+                                user='postgres', cursor_factory=RealDictCursor, port="5433")
+        cursor = conn.cursor()
+        print("Database connection was sucessful")
+        break
+    except Exception as e:
+        print("Connection to db Failed")
+        print(e)
+        time.sleep(2)
 
 
 SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:@localhost:5433/fastapi-blog'

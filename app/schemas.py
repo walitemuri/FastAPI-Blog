@@ -1,5 +1,14 @@
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr
+
+
+class UserOut(BaseModel):
+    id: int
+    email: EmailStr
+
+    class Config:
+        orm_mode = True
 
 
 class PostBase(BaseModel):
@@ -19,6 +28,8 @@ class UpdatePost(PostBase):
 class Post(PostBase):
     owner_id: int
     post_id: int
+    created_at: datetime
+    owner: UserOut
 
     class Config:
         orm_mode = True
@@ -27,14 +38,6 @@ class Post(PostBase):
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-
-
-class UserOut(BaseModel):
-    id: int
-    email: EmailStr
-
-    class Config:
-        orm_mode = True
 
 
 class UserLogin(BaseModel):
