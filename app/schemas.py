@@ -17,6 +17,8 @@ class UpdatePost(PostBase):
 
 
 class Post(PostBase):
+    owner_id: int
+    post_id: int
 
     class Config:
         orm_mode = True
