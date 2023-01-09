@@ -57,7 +57,7 @@ First Name and Last Name for each User that is generated.
 
 ## Author Information
 
-Name: Wali Temuri - 1183379
-Contact: wtemuri@uoguelph.ca
+Name: Wali Temuri9
+Contact: walitemuri@gmail.com
 
 ## Development History
