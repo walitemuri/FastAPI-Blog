@@ -5,7 +5,7 @@ REST API using FastAPI
 ## Description
 
 Full Documentation:
-https://fastapi--wt-blog.herokuapp.com/docs#/Users/create_user_users__post
+https://fastapi--wt-blog.herokuapp.com/docs
 
 ### Dependencies
 
