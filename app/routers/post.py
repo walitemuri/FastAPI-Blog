@@ -18,12 +18,15 @@ router = APIRouter(
 @router.get("/", response_model=list[schemas.PostOut])
 def get_posts(db: Session = Depends(get_db), user_id: int = Depends(oauth2.get_current_user),
               limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-
-    posts = db.query(models.Post).filter(
-        models.Post.title.contains(search)).limit(limit).offset(skip).all()
-
+    """
+    Filters:
+        Contains (search): Finds posts containing entered characters
+        Limit : Max # of posts to return
+        Offset: Skip X number of entries
+    """
     results = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
-        models.Vote, models.Vote.post_id == models.Post.post_id, isouter=True).group_by(models.Post.post_id).all()
+        models.Vote, models.Vote.post_id == models.Post.post_id, isouter=True).group_by(models.Post.post_id).filter(
+        models.Post.title.contains(search)).limit(limit).offset(skip).all()
     # cursor.execute(""" SELECT * FROM "blogPosts" ORDER BY post_id""")
     # posts = cursor.fetchall()
     # print(posts)
@@ -49,10 +52,11 @@ def create_posts(post: schemas.CreatePost, db: Session = Depends(get_db), curren
 # Retrieve One Post
 
 
-@router.get("/{id}", response_model=schemas.Post)
-def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+@router.get("/{id}", response_model=schemas.PostOut)
+def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)) -> schemas.PostOut:
 
-    post = db.query(models.Post).filter(models.Post.post_id == id).first()
+    post = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
+        models.Vote, models.Vote.post_id == models.Post.post_id, isouter=True).group_by(models.Post.post_id).filter(models.Post.post_id == id).first()
 
     # cursor.execute(
     #     """SELECT * FROM "blogPosts" WHERE post_id = %s""", (str(id), ))
@@ -66,7 +70,7 @@ def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends
 
 
 @router.delete("/{id}")
-def delete_post(id: int,  db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def delete_post(id: int,  db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)) -> None:
 
     deleted_post_query = db.query(
         models.Post).filter(models.Post.post_id == id)
