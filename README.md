@@ -10,7 +10,7 @@ GET: Get all Posts
 
 Successful Response:
 
-```
+```JSON
 [
   {
     "Post": {
