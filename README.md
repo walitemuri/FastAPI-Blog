@@ -2,6 +2,34 @@
 
 REST API using FastAPI
 
+## Routes
+
+```
+GET: Get all Posts
+```
+
+Successful Response:
+
+```
+[
+  {
+    "Post": {
+      "title": "string",
+      "content": "string",
+      "published": true,
+      "owner_id": 0,
+      "post_id": 0,
+      "created_at": "2023-02-02T13:49:06.844Z",
+      "owner": {
+        "id": 0,
+        "email": "user@example.com"
+      }
+    },
+    "votes": 0
+  }
+]
+```
+
 ## Description
 
 Full Documentation:
