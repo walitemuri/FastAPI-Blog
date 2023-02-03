@@ -95,9 +95,9 @@ Creates a Post instance for the provided parameters: title (string) and content 
 
 #### Request Body (Required)
 
-title (string).     : Title of the new post you wish to create.
-content (string)    : Content of new post.
-published (boolean) : Visible or archived post
+* title (string)      : Title of the new post you wish to create.
+* content (string)    : Content of new post.
+* published (boolean) : Visible or archived post
 
 ```JSON
 {
