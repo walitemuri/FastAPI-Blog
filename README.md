@@ -93,7 +93,7 @@ POST: https://fastapi--wt-blog.herokuapp.com/posts
 
 Creates a Post instance for the provided parameters: title (string) and content (string).
 
-### Request Body (Required)
+#### Request Body (Required)
 
 title (string).     : Title of the new post you wish to create.
 content (string)    : Content of new post.
