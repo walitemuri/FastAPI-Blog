@@ -1,6 +1,6 @@
 # Project Title
 
-REST API using FastAPI
+Blog application interface using FastAPI framework in Python and PostgreSQL as the database, hosted on Heroku for CI/CD.
 
 ## Content-Related Routes
 
