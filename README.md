@@ -2,7 +2,7 @@
 
 REST API using FastAPI
 
-## Routes
+## Content-Related Routes
 
 ### List Posts
 ```
@@ -10,11 +10,11 @@ GET: https://fastapi--wt-blog.herokuapp.com/posts
 ```
 List posts containing entered characters Limit : Max # of posts to return Offset: Skip X number of entries
 
-#### Parameters
+#### Path Parameters
 
-Limit (integer) : Default Value 10
-Offset (integer): Defualt Value 0
-Search (string) : Default Value ""
+* Limit (integer) : Default Value 10
+* Offset (integer): Defualt Value 0
+* Search (string) : Default Value ""
 
 Successful Response 200 OK:
 
@@ -36,6 +36,91 @@ Successful Response 200 OK:
     "votes": 0
   }
 ]
+```
+Invalid Authentication 401 Unauthorized:
+
+```JSON
+{
+    "detail": "Not authenticated"
+}
+```
+
+### Retrieve Post
+
+```
+GET: https://fastapi--wt-blog.herokuapp.com/posts/{id}
+```
+Retrieves a Post instance, providing relevant information about the post such as the owner email and id.
+
+#### Path Parameters
+
+* id (integer): Required
+
+Successful Response 200 OK:
+
+```JSON
+[
+  {
+    "Post": {
+      "title": "string",
+      "content": "string",
+      "published": true,
+      "owner_id": 0,
+      "post_id": 0,
+      "created_at": "2023-02-02T13:49:06.844Z",
+      "owner": {
+        "id": 0,
+        "email": "user@example.com"
+      }
+    },
+    "votes": 0
+  }
+]
+```
+Invalid Authentication 401 Unauthorized:
+
+```JSON
+{
+    "detail": "Not authenticated"
+}
+```
+
+### Create Post
+
+```
+POST: https://fastapi--wt-blog.herokuapp.com/posts
+```
+
+Creates a Post instance for the provided parameters: title (string) and content (string).
+
+### Request Body (Required)
+
+title (string).     : Title of the new post you wish to create.
+content (string)    : Content of new post.
+published (boolean) : Visible or archived post
+
+```JSON
+{
+  "title": "string",
+  "content": "string",
+  "published": true
+}
+```
+
+Sucessful Response 201 OK: 
+```JSON
+{
+    "title": "Example Title",
+    "content": "Example Content",
+    "published": true,
+    "owner_id": 3,
+    "post_id": 4,
+    "created_at": "2023-02-03T12:18:16.813267+00:00",
+    "owner": {
+        "id": 3,
+        "email": "3223@gmail.com"
+    }
+}
 ```
 Invalid Authentication 401 Unauthorized:
 
