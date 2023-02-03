@@ -4,11 +4,19 @@ REST API using FastAPI
 
 ## Routes
 
+### List Posts
 ```
-GET: Get all Posts
+GET: https://fastapi--wt-blog.herokuapp.com/posts
 ```
+List posts containing entered characters Limit : Max # of posts to return Offset: Skip X number of entries
 
-Successful Response:
+#### Parameters
+
+Limit (integer) : Default Value 10
+Offset (integer): Defualt Value 0
+Search (string) : Default Value ""
+
+Successful Response 200 OK:
 
 ```JSON
 [
@@ -28,6 +36,13 @@ Successful Response:
     "votes": 0
   }
 ]
+```
+Invalid Authentication 401 Unauthorized:
+
+```JSON
+{
+    "detail": "Not authenticated"
+}
 ```
 
 ## Description
